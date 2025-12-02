@@ -1,5 +1,5 @@
 1. git init
-
+==
 2. git add .
 
 3. git commit -m "message"
@@ -22,3 +22,27 @@ if you can add any files in local repository or you can change the existing file
 2. git add .
 3. git commit -m "message"
 4. git push origin main or master
+
+------------------------------------------------
+DOS Commands
+
+1. clear the screen : cls
+2. creating directory : mkdir
+3. how to hide a  folder : attrib +h        
+4. how to unhide a folder : attrib - h
+5. how to remove one empty directory : rmdir
+6. how to remove folder with content: mkdir
+7. Display the content of a directory: dir
+8. how to display hidden folder: dir/a:h
+9. how to rename a folder: rename <name><n name>
+10. To display the content of a file: type<filename>
+11. To create a new text file: notepad filename.txt
+12. To forward the content of one file to other file: type mayuri.txt> Anurag.txt
+13. To delete a file : del<filename>
+14. To delete all txt files: del*.txt
+15. The list of wild characters:
+	? -single character
+	* -0 or more characters
+16. To display all single character named file with extension.txt: dir ?.txt
+17. To display all files with any extension : dir*.*
+To merge all file content in one file: type a.txt b.txt ab.txt > c.txt
