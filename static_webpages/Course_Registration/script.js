@@ -19,7 +19,6 @@ subjects.forEach(item => {
 // Optional: form submit
 document.getElementById("regForm").addEventListener("submit", function(e){
     e.preventDefault();
-      e.preventDefault();
 
     let selectedSubjects = [];
     let totalFee = 0;
@@ -36,7 +35,7 @@ document.getElementById("regForm").addEventListener("submit", function(e){
     });
 
     if (selectedSubjects.length === 0) {
-        alert("Please select at least one subject.");
+        showMessage("Please select at least one subject.", true);
         return;
     }
 
@@ -47,5 +46,26 @@ document.getElementById("regForm").addEventListener("submit", function(e){
         "Selected Subjects:\n- " + selectedSubjects.join("\n- ") + "\n\n" +
         "Total Fee: ₹" + totalFee;
 
-    alert(message);
+    showMessage(message, false);
 });
+
+// Function to display message in div container
+function showMessage(message, isError) {
+    const messageContainer = document.getElementById("messageContainer");
+    const messageContent = document.getElementById("messageContent");
+    
+    messageContent.innerText = message;
+    messageContainer.classList.remove("hidden");
+    
+    if (isError) {
+        messageContainer.classList.add("error");
+    } else {
+        messageContainer.classList.remove("error");
+    }
+}
+
+// Function to close the message
+function closeMessage() {
+    const messageContainer = document.getElementById("messageContainer");
+    messageContainer.classList.add("hidden");
+}
