@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty-wise Timetable</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f6f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        select, input[type="file"] {
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .faculty-card {
+            display: flex;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: fit-content;              /* ❤️ FIX 1: no white extra space */
+            max-width: 90%;                  /* responsive */
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap;                 /* ❤️ FIX 2: adjusts on small screens */
+        }
+
+        .faculty-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;              /* ❤️ ROUND IMAGE */
+            object-fit: cover;
+            border: 3px solid #007acc;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: auto;                     /* ❤️ FIX 3: only take required width */
+            background: #fff;
+        }
+
+        th, td {
+            border: 1px solid #bbb;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+            min-width: 120px;                /* ❤️ prevents text squeezing */
+        }
+
+        th {
+            background: #007acc;
+            color: white;
+        }
+
+        .faculty-title {
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #005a8d;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #003d66;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Upload CSV File</h2>
+
+<select id='faculty_id'>
+    <option value="ALL">Select ALL Faculty</option>
+    <option value='KMY'>K MAYURI</option>
+    <option value='CVR'>CVR</option>
+</select>
+
+<input type="file" id="csvFile" accept=".csv">
+
+<div id="tables"></div>
+
+<script>
+
+document.getElementById("csvFile").addEventListener("change", function () {
+    let fac_id = document.getElementById('faculty_id').value;
+
+    Papa.parse(this.files[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+            processCSV(result.data, fac_id);
+        }
+    });
+});
+
+function processCSV(data, fac_id) {
+    const facultyTable = {};
+
+    data.forEach(row => {
+        const faculty = row["FACULTY"];
+        const day = row["DAY"];
+        const session = row["SESSION"];
+        const course = row["COURSE"];
+        const room = row["ROOM"];
+        const batch = row["BATCH"];
+
+        if (fac_id === "ALL" || fac_id === faculty) {
+            if (!faculty || !day || !session) return;
+
+            if (!facultyTable[faculty]) facultyTable[faculty] = {};
+            if (!facultyTable[faculty][day]) facultyTable[faculty][day] = { FN: "", AN: "" };
+
+            facultyTable[faculty][day][session] =
+                `${course}<br>Room: ${room}<br>Batch: ${batch}`;
+        }
+    });
+
+    buildFacultyTables(facultyTable);
+}
+
+function buildFacultyTables(facultyTable) {
+    const container = document.getElementById("tables");
+    container.innerHTML = "<div class='title'>Faculty-wise Timetable</div>";
+
+    const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+    const facultyPhotos = {
+        "KMY": "KMY.png",
+        "CVR": "CVR.png"
+    };
+
+    for (const faculty in facultyTable) {
+
+        const card = document.createElement("div");
+        card.className = "faculty-card";
+
+        const img = document.createElement("img");
+        img.className = "faculty-img";
+        img.src = facultyPhotos[faculty] || "default.jpg";
+
+        const content = document.createElement("div");
+
+        const title = document.createElement("div");
+        title.className = "faculty-title";
+        title.innerHTML = `Faculty: ${faculty}`;
+
+        const table = document.createElement("table");
+        let html =
+            "<tr><th>DAY</th><th>FN</th><th rowspan=7>L<br>U<br>N<br>C<br>H</th><th>AN</th></tr>";
+
+        days.forEach(day => {
+            const fn = facultyTable[faculty][day]?.FN || "";
+            const an = facultyTable[faculty][day]?.AN || "";
+
+            html += `
+                <tr>
+                    <td>${day}</td>
+                    <td>${fn}</td>
+                    <td>${an}</td>
+                </tr>
+            `;
+        });
+
+        table.innerHTML = html;
+
+        content.appendChild(title);
+        content.appendChild(table);
+
+        card.appendChild(img);
+        card.appendChild(content);
+
+        container.appendChild(card);
+    }
+}
+</script>
+
+</body>
+</html>
