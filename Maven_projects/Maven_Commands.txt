@@ -1,0 +1,22 @@
+Requirements to do a Maven Projects
+1.Java (JDK needed to install)
+2.Apache Maven are required (.Zip file)
+Note:- set the environment Variables (JAVA_HOME , MAVEN_HOME) and edit the path variables and add this files upto bin folder
+3.Verification of this two files in command prompt
+  Java -version
+  mvn -v
+4.mvn archetype:generate -DgroupId=com.skillnext -DartifactId=welcome -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+  -D refers the define property or define parameter
+   GroupId refers the package name
+   ArtifactId refers the project name
+   archetypeArtifactId refers the type of project (if simple java project then we can use maven-           archetype-quickstart , if it is web project then we can use maven-archetype-webapp)
+5.Verify in command prompt as build success then 
+6.cd welcome
+7.mvn compile
+8.mvn package (it creates jar or war file in target folder)
+9.cd target
+10.Verify the jar file in command prompt by using dir command
+11.For execution purpose the following syntax
+java -cp<classpath><mainclass>
+
+java -cp welcome-1.0-SNAPSHOT.jar com.skillnext.App
